@@ -7,19 +7,17 @@ let users = [
     id: "b42f53fa-7b30-4b91-8d36-dc1c6ef27611",
     name: "Carlos Navia",
     email: "carlos@example.com",
+    role: "admin",
     fechaRegistro: "2025-09-12T12:00:00Z"
   },
   {
     id: "b42f53fa-7b30-4b91-8d36-dc1c6ef27620",
     name: "Fabricio Gomez",
     email: "Fabricio@example.com",
+    role: "user",
     fechaRegistro: "2025-09-12T12:00:00Z"
   }
 ];
-
-router.get('/', (req, res) => {
-    res.status(200).json(users);
-});
 
 // GET /users/:id
 router.get('/:id', (req, res) => {
@@ -32,5 +30,45 @@ router.get('/:id', (req, res) => {
 
   res.status(200).json(user);   // 4
 });
+
+// GET buscar por rol y nombre
+router.get('/', (req, res) => {
+  const { role, search } = req.query;  // 1
+  let result = users;                  // 2
+
+  if (role) {                          // 3
+    result = result.filter(u => u.role === role);
+  }
+
+  if (search) {                        // 4
+    result = result.filter(u =>
+      u.name.toLowerCase().includes(search.toLowerCase())
+    );
+  }
+
+  res.status(200).json(result);        // 5
+});
+
+// POST /users
+router.post('/', (req, res) => {
+  const { name, email, role } = req.body;   // 1
+
+  if (!name || !email) {   // 2
+    return res.status(400).json({ error: 'Name y email son requeridos' });
+  }
+
+  const newUser = {   // 3
+    id: `${Date.now()}`,  // identificador temporal
+    name,
+    email,
+    role: role || 'user',  // valor por defecto si no envían rol
+    createdAt: new Date().toISOString()
+  };
+
+  users.push(newUser);   // 4
+
+  res.status(201).json(newUser);   // 5
+});
+
 
 module.exports = router;
