@@ -1,0 +1,56 @@
+// Estado en memoria (simulación)
+let workouts = [
+  {
+    id: "101",
+    usuarioId: "b42f53fa-7b30-4b91-8d36-dc1c6ef27611",
+    fechaProgramada: "2025-09-20T10:00:00Z",
+    comentarios: "Entrenamiento de fuerza para piernas y pecho",
+    fechaCreacion: "2025-09-15T08:00:00Z"
+  },
+  {
+    id: "102",
+    usuarioId: "b42f53fa-7b30-4b91-8d36-dc1c6ef27620", 
+    fechaProgramada: "2025-09-21T17:30:00Z",
+    comentarios: "Entrenamiento cardiovascular y core",
+    fechaCreacion: "2025-09-16T10:00:00Z"
+  }
+];
+
+// Controladores
+const workoutController = {
+  // GET /workouts/:id
+  getWorkoutById: (req, res) => {
+    const { id } = req.params;
+    const workout = workouts.find(w => w.id === id);
+
+    if (!workout) {
+      return res.status(404).json({ error: 'Entrenamiento no encontrado' });
+    }
+
+    res.status(200).json(workout);
+  },
+
+    //GET buscar por usuarioId o fecha
+  getWorkouts: (req, res) => {
+    const { usuarioId, fecha, search } = req.query;
+    let result = workouts;
+
+    if (usuarioId) {
+      result = result.filter(w => w.usuarioId === usuarioId);
+    }
+
+    if (fecha) {
+      result = result.filter(w => w.fechaProgramada.includes(fecha));
+    }
+
+    if (search) {
+      result = result.filter(w =>
+        w.comentarios.toLowerCase().includes(search.toLowerCase())
+      );
+    }
+
+    res.status(200).json(result);
+  },
+};
+
+module.exports = workoutController;
