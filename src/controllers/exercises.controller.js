@@ -52,6 +52,28 @@ const exerciseController = {
 
     res.status(200).json(result);
   },
+  
+  // POST /exercises
+  createExercise: (req, res) => {
+    const { name, description, categoria, grupoMuscular } = req.body;
+
+    if (!name || !description || !categoria || !grupoMuscular) {
+      return res.status(400).json({ 
+        error: 'Name, description, categoria y grupoMuscular son requeridos' 
+      });
+    }
+
+    const newExercise = {
+      id: `ex${exercises.length + 1}`,
+      name,
+      description,
+      categoria,
+      grupoMuscular
+    };
+
+    exercises.push(newExercise);
+    res.status(201).json(newExercise);
+  },
 };
 
 module.exports = exerciseController;
