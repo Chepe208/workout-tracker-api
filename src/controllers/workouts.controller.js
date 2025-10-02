@@ -72,6 +72,29 @@ const workoutController = {
     res.status(201).json(newWorkout);
   },
 
+  // PUT /workouts/:id
+  updateWorkout: (req, res) => {
+    const { id } = req.params;
+    const { usuarioId, fechaProgramada, comentarios } = req.body;
+
+    const index = workouts.findIndex(w => w.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: 'Entrenamiento no encontrado' });
+    }
+
+    if (!usuarioId || !fechaProgramada) {
+      return res.status(400).json({error: 'usuarioId y fechaProgramada son requeridos' });
+    }
+
+    workouts[index] = {
+      ...workouts[index],
+      usuarioId,
+      fechaProgramada,
+      comentarios: comentarios || ''
+    };
+
+    res.status(200).json(workouts[index]);
+  },
 
 };
 
