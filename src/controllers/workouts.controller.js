@@ -51,6 +51,28 @@ const workoutController = {
 
     res.status(200).json(result);
   },
+
+  // POST /workouts
+  createWorkout: (req, res) => {
+    const { usuarioId, fechaProgramada, comentarios } = req.body;
+
+    if (!usuarioId || !fechaProgramada) {
+      return res.status(400).json({error: 'usuarioId y fechaProgramada son requeridos'});
+    }
+
+    const newWorkout = {
+      id: `${workouts.length + 101}`,
+      usuarioId,
+      fechaProgramada,
+      comentarios: comentarios || '',
+      fechaCreacion: new Date().toISOString()
+    };
+
+    workouts.push(newWorkout);
+    res.status(201).json(newWorkout);
+  },
+
+
 };
 
 module.exports = workoutController;
