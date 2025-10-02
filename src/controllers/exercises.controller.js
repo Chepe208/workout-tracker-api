@@ -74,6 +74,69 @@ const exerciseController = {
     exercises.push(newExercise);
     res.status(201).json(newExercise);
   },
+    // PUT /exercises/:id
+  updateExercise: (req, res) => {
+    const { id } = req.params;
+    const { name, description, categoria, grupoMuscular } = req.body;
+
+    const index = exercises.findIndex(ex => ex.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: 'Ejercicio no encontrado' });
+    }
+
+    if (!name || !grupoMuscular) {
+      return res.status(400).json({ 
+        error: 'Name y grupoMuscular son requeridos' 
+      });
+    }
+
+    exercises[index] = {
+      ...exercises[index],
+      name,
+      description,
+      categoria,
+      grupoMuscular
+    };
+
+    res.status(200).json(exercises[index]);
+  },
+  //PATCH
+    partialUpdateExercise: (req, res) => {
+    const { id } = req.params;
+
+    const index = exercises.findIndex(ex => ex.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: 'Ejercicio no encontrado' });
+    }
+
+    const camposPermitidos = ['name', 'description', 'categoria', 'grupoMuscular'];
+    const actualizacion = {};
+    const camposModificados = [];
+
+    camposPermitidos.forEach(campo => {
+      if (req.body[campo] !== undefined) {
+        actualizacion[campo] = req.body[campo];
+        camposModificados.push(campo);
+      }
+    });
+
+    if (camposModificados.length === 0) {
+      return res.status(400).json({ 
+        error: 'No se proporcionaron campos válidos para actualizar',
+        camposPermitidos: camposPermitidos
+      });
+    }
+
+    exercises[index] = {
+      ...exercises[index],
+      ...actualizacion
+    };
+
+    res.status(200).json({
+      message: 'Ejercicio actualizado parcialmente',
+      ejercicio: exercises[index],
+    });
+  }
 };
 
 module.exports = exerciseController;
