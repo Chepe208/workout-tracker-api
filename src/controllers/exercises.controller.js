@@ -136,7 +136,22 @@ const exerciseController = {
       message: 'Ejercicio actualizado parcialmente',
       ejercicio: exercises[index],
     });
-  }
+  },
+    //DELETE /exercises/:id
+  deleteExercise: (req, res) => {
+    const { id } = req.params;
+    const index = exercises.findIndex(ex => ex.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Ejercicio no encontrado' });
+    }
+
+    const deletedExercise = exercises.splice(index, 1);
+    res.status(200).json({ 
+      message: 'Ejercicio eliminado correctamente',
+      deleted: deletedExercise[0].id 
+    });
+  },
 };
 
 module.exports = exerciseController;
