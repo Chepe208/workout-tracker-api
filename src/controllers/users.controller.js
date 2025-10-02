@@ -56,12 +56,6 @@ const userController = {
       return res.status(400).json({ error: 'Name y email son requeridos' });
     }
 
-    // Verificar si el email ya existe
-    const existingUser = users.find(u => u.email === email);
-    if (existingUser) {
-      return res.status(409).json({ error: 'El email ya está registrado' });
-    }
-
     const newUser = {
       id: `b42f53fa-7b30-4b91-8d36-dc1c6ef2${Date.now().toString().slice(-6)}`,
       name,
@@ -86,12 +80,6 @@ const userController = {
 
     if (!name || !email) {
       return res.status(400).json({ error: 'Name y email son requeridos' });
-    }
-
-    // Verificar si el email ya existe en otro usuario
-    const emailExists = users.some(u => u.email === email && u.id !== id);
-    if (emailExists) {
-      return res.status(409).json({ error: 'El email ya está en uso por otro usuario' });
     }
 
     users[index] = {
