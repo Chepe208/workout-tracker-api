@@ -95,6 +95,26 @@ const {workoutId, exerciseId, series, repeticiones, peso } = req.body;
     res.status(200).json(workoutExercises[index]);
   },
 
+  // PATCH /workoutsExercises/:id
+ partialUpdateWorkoutExercise: (req, res) => {
+  const { id } = req.params;
+  const exercise = workoutExercises.find(we => we.id === id);
+
+  if (!exercise) {
+    return res.status(404).json({ error: 'Ejercicio de entrenamiento no encontrado' });
+  }
+
+  // Actualizar solo campos enviados en el body
+  const camposActualizables = ['series', 'repeticiones', 'peso'];
+  camposActualizables.forEach(campo => {
+    if (req.body[campo] !== undefined) {
+      exercise[campo] = parseInt(req.body[campo]);
+    }
+  });
+
+  res.status(200).json(exercise);
+},
+
   // DELETE /workoutsExercises/:id
   deleteWorkoutExercise: (req, res) => {
     const { id } = req.params;
