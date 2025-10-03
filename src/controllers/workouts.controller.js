@@ -99,6 +99,25 @@ const workoutController = {
     res.status(200).json(workouts[index]);
   },
 
+  // PATCH /workouts/:id
+partialUpdateWorkout: (req, res) => {
+  const { id } = req.params;
+  const workout = workouts.find(w => w.id === id);
+
+  if (!workout) {
+    return res.status(404).json({ error: 'Entrenamiento no encontrado' });
+  }
+  
+  const camposActualizables = ['usuarioId', 'fechaProgramada', 'comentarios'];
+  camposActualizables.forEach(campo => {
+    if (req.body[campo] !== undefined) {
+      workout[campo] = req.body[campo];
+    }
+  });
+
+  res.status(200).json(workout);
+},
+
   // DELETE /workouts/:id
   deleteWorkout: (req, res) => {
     const { id } = req.params;
