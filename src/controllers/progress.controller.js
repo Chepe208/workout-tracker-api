@@ -48,6 +48,28 @@ const progressController = {
 
     res.status(200).json(result);
   },
+
+   // POST /progress
+  createProgress: (req, res) => {
+    const { usuarioId, workoutId, fechaFinalizacion, notas } = req.body;
+
+    if (!usuarioId || !workoutId) {
+      return res.status(400).json({ 
+        error: 'usuarioId y workoutId son requeridos'
+      });
+    }
+
+    const newProgress = {
+      id: `${progress.length + 501}`,
+      usuarioId,
+      workoutId,
+      fechaFinalizacion: new Date().toISOString(),
+      notas: notas || ''
+    };
+
+    progress.push(newProgress);
+    res.status(201).json(newProgress);
+  },
 };
 
 module.exports = progressController;
