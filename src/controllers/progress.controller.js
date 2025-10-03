@@ -70,6 +70,22 @@ const progressController = {
     progress.push(newProgress);
     res.status(201).json(newProgress);
   },
+
+  // DELETE /progress/:id
+  deleteProgress: (req, res) => {
+    const { id } = req.params;
+    const index = progress.findIndex(p => p.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Progreso no encontrado' });
+    }
+
+    const deletedProgress = progress.splice(index, 1);
+    res.status(200).json({ 
+      message: 'Progreso eliminado correctamente',
+      deleted: deletedProgress[0].id 
+    });
+  }
 };
 
 module.exports = progressController;
