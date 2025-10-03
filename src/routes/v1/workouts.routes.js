@@ -7,5 +7,6 @@ router.get('/:id', workoutController.getWorkoutById);
 router.get('/', workoutController.getWorkouts);
 router.post('/', workoutController.createWorkout);
 router.put('/:id', workoutController.updateWorkout);
+router.delete('/:id', workoutController.deleteWorkout);
 
 module.exports = router;

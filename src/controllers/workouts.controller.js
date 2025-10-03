@@ -30,7 +30,7 @@ const workoutController = {
     res.status(200).json(workout);
   },
 
-    //GET buscar por usuarioId o fecha
+  // GET /workouts - buscar por usuarioId o fecha
   getWorkouts: (req, res) => {
     const { usuarioId, fecha, search } = req.query;
     let result = workouts;
@@ -57,7 +57,8 @@ const workoutController = {
     const { usuarioId, fechaProgramada, comentarios } = req.body;
 
     if (!usuarioId || !fechaProgramada) {
-      return res.status(400).json({error: 'usuarioId y fechaProgramada son requeridos'});
+      return res.status(400).json({ 
+        error: 'usuarioId y fechaProgramada son requeridos'});
     }
 
     const newWorkout = {
@@ -83,7 +84,9 @@ const workoutController = {
     }
 
     if (!usuarioId || !fechaProgramada) {
-      return res.status(400).json({error: 'usuarioId y fechaProgramada son requeridos' });
+      return res.status(400).json({ 
+        error: 'usuarioId y fechaProgramada son requeridos' 
+      });
     }
 
     workouts[index] = {
@@ -96,6 +99,21 @@ const workoutController = {
     res.status(200).json(workouts[index]);
   },
 
+  // DELETE /workouts/:id
+  deleteWorkout: (req, res) => {
+    const { id } = req.params;
+    const index = workouts.findIndex(w => w.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Entrenamiento no encontrado' });
+    }
+
+    const deletedWorkout = workouts.splice(index, 1);
+    res.status(200).json({ 
+      message: 'Entrenamiento eliminado correctamente',
+      deleted: deletedWorkout[0].id 
+    });
+  },
 };
 
 module.exports = workoutController;
