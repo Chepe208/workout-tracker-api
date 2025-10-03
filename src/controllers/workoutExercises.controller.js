@@ -45,7 +45,30 @@ const workoutExerciseController = {
     }
 
     res.status(200).json(result);
+  },
+
+  // POST /workouts/:workoutId/exercises
+UpdateExerciseworkout: (req, res) => {
+const {workoutId, exerciseId, series, repeticiones, peso } = req.body;
+
+  if (!exerciseId || !series || !repeticiones) {
+    return res.status(400).json({
+      error: 'exerciseId, series y repeticiones son requeridos'
+    });
   }
+
+  const newWorkoutExercise = {
+    id: `${workoutExercises.length + 1}`,
+    workoutId,
+    exerciseId,
+    series: parseInt(series),
+    repeticiones: parseInt(repeticiones),
+    peso: peso ? parseInt(peso) : 0
+  };
+
+  workoutExercises.push(newWorkoutExercise);
+  res.status(201).json(newWorkoutExercise);
+}
 };
 
 module.exports = workoutExerciseController;

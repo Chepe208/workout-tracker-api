@@ -4,7 +4,7 @@ const workoutExercisesController = require('../../controllers/workoutExercises.c
 
 router.get('/:id', workoutExercisesController. getWorkoutExerciseById);
 router.get('/', workoutExercisesController.getWorkoutsExercises);
-
+router.post('/', workoutExercisesController.UpdateExerciseworkout);
 
 
 module.exports = router;
