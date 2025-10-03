@@ -74,5 +74,21 @@ const reportController = {
     reports.push(newReport);
     res.status(201).json(newReport);
   },
+  
+  // DELETE /reports/:id
+  deleteReport: (req, res) => {
+    const { id } = req.params;
+    const index = reports.findIndex(r => r.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Reporte no encontrado' });
+    }
+
+    const deletedReport = reports.splice(index, 1);
+    res.status(200).json({ 
+      message: 'Reporte eliminado correctamente',
+      deleted: deletedReport[0].id 
+    });
+  }
 };
 module.exports = reportController;
