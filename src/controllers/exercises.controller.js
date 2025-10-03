@@ -100,43 +100,23 @@ const exerciseController = {
 
     res.status(200).json(exercises[index]);
   },
-  //PATCH
-    partialUpdateExercise: (req, res) => {
-    const { id } = req.params;
 
-    const index = exercises.findIndex(ex => ex.id === id);
-    if (index === -1) {
-      return res.status(404).json({ error: 'Ejercicio no encontrado' });
+  // PATCH /exercises/:id
+partialUpdateExercise: (req, res) => {
+  const { id } = req.params;
+  const exercise = exercises.find(ex => ex.id === id);
+
+  if (!exercise) {
+    return res.status(404).json({ error: 'Ejercicio no encontrado' });
+  }
+  const camposActualizables = ['name', 'description', 'categoria', 'grupoMuscular'];
+  camposActualizables.forEach(campo => {
+    if (req.body[campo] !== undefined) {
+      exercise[campo] = req.body[campo];
     }
-
-    const camposPermitidos = ['name', 'description', 'categoria', 'grupoMuscular'];
-    const actualizacion = {};
-    const camposModificados = [];
-
-    camposPermitidos.forEach(campo => {
-      if (req.body[campo] !== undefined) {
-        actualizacion[campo] = req.body[campo];
-        camposModificados.push(campo);
-      }
-    });
-
-    if (camposModificados.length === 0) {
-      return res.status(400).json({ 
-        error: 'No se proporcionaron campos válidos para actualizar',
-        camposPermitidos: camposPermitidos
-      });
-    }
-
-    exercises[index] = {
-      ...exercises[index],
-      ...actualizacion
-    };
-
-    res.status(200).json({
-      message: 'Ejercicio actualizado parcialmente',
-      ejercicio: exercises[index],
-    });
-  },
+  });
+  res.status(200).json(exercise);
+},
     //DELETE /exercises/:id
   deleteExercise: (req, res) => {
     const { id } = req.params;
