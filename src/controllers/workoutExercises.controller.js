@@ -48,7 +48,7 @@ const workoutExerciseController = {
   },
 
   // POST /workouts/:workoutId/exercises
-UpdateExerciseworkout: (req, res) => {
+CreateExerciseworkout: (req, res) => {
 const {workoutId, exerciseId, series, repeticiones, peso } = req.body;
 
   if (!exerciseId || !series || !repeticiones) {
@@ -68,7 +68,32 @@ const {workoutId, exerciseId, series, repeticiones, peso } = req.body;
 
   workoutExercises.push(newWorkoutExercise);
   res.status(201).json(newWorkoutExercise);
-}
+},
+  // PUT /workoutsExercises/:id
+  updateWorkoutExercise: (req, res) => {
+    const { id } = req.params;
+    const { series, repeticiones, peso } = req.body;
+
+    const index = workoutExercises.findIndex(we => we.id === id);
+    if (index === -1) {
+      return res.status(404).json({ error: 'Ejercicio de entrenamiento no encontrado' });
+    }
+
+    if (!series || !repeticiones) {
+      return res.status(400).json({ 
+        error: 'series y repeticiones son requeridos' 
+      });
+    }
+
+    workoutExercises[index] = {
+      ...workoutExercises[index],
+      series: parseInt(series),
+      repeticiones: parseInt(repeticiones),
+      peso: peso ? parseInt(peso) : workoutExercises[index].peso
+    };
+
+    res.status(200).json(workoutExercises[index]);
+  },
 };
 
 module.exports = workoutExerciseController;
