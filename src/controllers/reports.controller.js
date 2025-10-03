@@ -50,5 +50,29 @@ const reportController = {
 
     res.status(200).json(result);
   },
+  // POST /reports
+  createReport: (req, res) => {
+    const { usuarioId, periodo, resumen } = req.body;
+
+    if (!usuarioId || !periodo || !resumen) {
+      return res.status(400).json({ 
+        error: 'usuarioId, periodo y resumen son requeridos'
+      });
+    }
+
+    const newReport = {
+      id: `${reports.length + 701}`,
+      usuarioId,
+      periodo,
+      resumen: {
+        totalEntrenamientos: resumen.totalEntrenamientos || 0,
+        tiempoTotal: resumen.tiempoTotal || "0h 0m",
+        ejerciciosMasFrecuentes: resumen.ejerciciosMasFrecuentes || []
+      }
+    };
+
+    reports.push(newReport);
+    res.status(201).json(newReport);
+  },
 };
 module.exports = reportController;
