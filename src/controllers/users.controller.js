@@ -91,42 +91,25 @@ const userController = {
 
     res.status(200).json(users[index]);
   },
-//PATCH
+
+  // PATCH /users/:id
   partialUpdateUser: (req, res) => {
     const { id } = req.params;
+    const user = users.find(u => u.id === id);
 
-    const index = users.findIndex(u => u.id === id);
-    if (index === -1) {
+    if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const camposPermitidos = ['name', 'email', 'role'];
-    const actualizacion = {};
-    const camposModificados = [];
-
-    camposPermitidos.forEach(campo => {
+    // Actualizar solo campos enviados en el body
+    const camposActualizables = ['name', 'email', 'role'];
+    camposActualizables.forEach(campo => {
       if (req.body[campo] !== undefined) {
-        actualizacion[campo] = req.body[campo];
-        camposModificados.push(campo);
+        user[campo] = req.body[campo];
       }
     });
 
-    if (camposModificados.length === 0) {
-      return res.status(400).json({ 
-        error: 'No se proporcionaron campos válidos para actualizar',
-        camposPermitidos: camposPermitidos
-      });
-    }
-
-    users[index] = {
-      ...users[index],
-      ...actualizacion
-    };
-
-    res.status(200).json({
-      message: 'Usuario actualizado parcialmente',
-      usuario: users[index],
-    });
+    res.status(200).json(user);
   },
 
   // DELETE /users/:id
