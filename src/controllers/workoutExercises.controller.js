@@ -94,6 +94,22 @@ const {workoutId, exerciseId, series, repeticiones, peso } = req.body;
 
     res.status(200).json(workoutExercises[index]);
   },
+
+  // DELETE /workoutsExercises/:id
+  deleteWorkoutExercise: (req, res) => {
+    const { id } = req.params;
+    const index = workoutExercises.findIndex(we => we.id === id);
+
+    if (index === -1) {
+      return res.status(404).json({ error: 'Ejercicio de entrenamiento no encontrado' });
+    }
+
+    const deletedExercise = workoutExercises.splice(index, 1);
+    res.status(200).json({ 
+      message: 'Ejercicio eliminado del entrenamiento correctamente',
+      deleted: deletedExercise[0].id 
+    });
+  },
 };
 
 module.exports = workoutExerciseController;
